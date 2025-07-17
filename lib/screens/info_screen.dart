@@ -79,7 +79,7 @@ class _InfoScreenState extends State<InfoScreen> {
             onPressed: () => Navigator.pop(context),
           ),
           ElevatedButton(
-            child: const Text("Add"),
+            child: const Text("Add", style: TextStyle(color: Colors.white),),
             style: ElevatedButton.styleFrom(backgroundColor: Colors.deepPurple),
             onPressed: () {
               final command = commandController.text.trim();
