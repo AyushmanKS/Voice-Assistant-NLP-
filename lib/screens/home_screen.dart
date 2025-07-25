@@ -15,14 +15,42 @@ class _HomeScreenState extends State<HomeScreen> {
   final VoiceService _voiceService = VoiceService();
 
   final List<Product> _products = [
-    Product(name: 'Wand of Elder', image: 'assets/images/wand.jpeg', price: 299.99),
-    Product(name: 'Invisibility Cloak', image: 'assets/images/cloak.jpeg', price: 499.99),
-    Product(name: 'Potion Kit', image: 'assets/images/potion.jpeg', price: 149.99),
-    Product(name: 'Flying Broomstick', image: 'assets/images/broom.jpeg', price: 999.99),
-    Product(name: 'Time Turner', image: 'assets/images/time_turner.jpeg', price: 799.99),
-    Product(name: 'Hogwarts Robe', image: 'assets/images/robe.jpeg', price: 199.99),
+    Product(
+      name: 'Wand of Elder',
+      image: 'assets/images/wand.jpeg',
+      price: 299.99,
+    ),
+    Product(
+      name: 'Invisibility Cloak',
+      image: 'assets/images/cloak.jpeg',
+      price: 499.99,
+    ),
+    Product(
+      name: 'Potion Kit',
+      image: 'assets/images/potion.jpeg',
+      price: 149.99,
+    ),
+    Product(
+      name: 'Flying Broomstick',
+      image: 'assets/images/broom.jpeg',
+      price: 999.99,
+    ),
+    Product(
+      name: 'Time Turner',
+      image: 'assets/images/time_turner.jpeg',
+      price: 799.99,
+    ),
+    Product(
+      name: 'Hogwarts Robe',
+      image: 'assets/images/robe.jpeg',
+      price: 199.99,
+    ),
     Product(name: 'Spell Book', image: 'assets/images/book.jpeg', price: 99.99),
-    Product(name: 'Owl Messenger', image: 'assets/images/owl.jpeg', price: 249.99),
+    Product(
+      name: 'Owl Messenger',
+      image: 'assets/images/owl.jpeg',
+      price: 249.99,
+    ),
   ];
 
   String _searchQuery = '';
@@ -57,31 +85,38 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  void _handleVoiceCommand(String command) {
-    command = command.toLowerCase().trim();
+  void _handleIntent(String intent, String originalText) {
+    final command = intent.toLowerCase();
 
-    if (command.contains("add")) {
-      String itemName = command.replaceAll("add", "").replaceAll("to cart", "").trim();
+    if (command == "add_to_cart") {
+      String itemName = originalText
+          .replaceAll(RegExp(r'add|to cart'), '')
+          .trim()
+          .toLowerCase();
       final match = _products.firstWhere(
-            (p) => p.name.toLowerCase().contains(itemName),
+        (p) => p.name.toLowerCase().contains(itemName),
         orElse: () => Product(name: '', image: '', price: 0),
       );
 
       if (match.name.isNotEmpty) {
         Provider.of<CartProvider>(context, listen: false).addToCart(match);
-        _showVoiceFeedback('Casting “Add $itemName to cart” spell...');
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('${match.name} added to cart')));
+        _showVoiceFeedback('Casting “Add ${match.name} to cart” spell...');
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('${match.name} added to cart')));
       } else {
         _showVoiceFeedback('No magical item found for "$itemName".');
       }
-    } else if (command.contains("checkout") || command.contains("check out")) {
+    } else if (command == "checkout") {
       _showVoiceFeedback('Teleporting to checkout...');
       Navigator.pushNamed(context, '/cart');
-    } else if (command.contains("search")) {
-      String query = command.replaceAll("search", "").trim();
+    } else if (command == "search") {
+      String query = originalText
+          .replaceAll(RegExp(r'search|find|look for'), '')
+          .trim();
       setState(() => _searchQuery = query);
       _showVoiceFeedback('Revealing results for "$query"...');
-    } else if (command.contains("go home") || command.contains("go back") || command == "home") {
+    } else if (command == "home") {
       setState(() => _searchQuery = '');
       _showVoiceFeedback('Returning to Home...');
     } else {
@@ -96,7 +131,7 @@ class _HomeScreenState extends State<HomeScreen> {
     }).toList();
 
     return Scaffold(
-      backgroundColor: const Color(0xFF1C1B2F), // dark wizard theme
+      backgroundColor: const Color(0xFF1C1B2F),
       appBar: AppBar(
         backgroundColor: Colors.deepPurple[900],
         elevation: 4,
@@ -116,7 +151,10 @@ class _HomeScreenState extends State<HomeScreen> {
           Column(
             children: [
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 10,
+                ),
                 child: TextField(
                   decoration: InputDecoration(
                     hintText: 'Search magical items...',
@@ -138,12 +176,13 @@ class _HomeScreenState extends State<HomeScreen> {
                   padding: const EdgeInsets.symmetric(horizontal: 8),
                   child: GridView.builder(
                     itemCount: filteredProducts.length,
-                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      mainAxisSpacing: 10,
-                      crossAxisSpacing: 10,
-                      childAspectRatio: 0.7,
-                    ),
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          mainAxisSpacing: 10,
+                          crossAxisSpacing: 10,
+                          childAspectRatio: 0.7,
+                        ),
                     itemBuilder: (context, index) {
                       final product = filteredProducts[index];
                       return Container(
@@ -152,7 +191,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           borderRadius: BorderRadius.circular(16),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black.withValues(alpha :0.3),
+                              color: Colors.black.withOpacity(0.3),
                               spreadRadius: 1,
                               blurRadius: 6,
                               offset: const Offset(0, 4),
@@ -188,18 +227,33 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                               const SizedBox(height: 4),
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
                                     '\$${product.price.toStringAsFixed(2)}',
-                                    style: const TextStyle(color: Colors.white70),
+                                    style: const TextStyle(
+                                      color: Colors.white70,
+                                    ),
                                   ),
                                   IconButton(
-                                    icon: const Icon(Icons.add_shopping_cart, color: Colors.amberAccent),
+                                    icon: const Icon(
+                                      Icons.add_shopping_cart,
+                                      color: Colors.amberAccent,
+                                    ),
                                     onPressed: () {
-                                      Provider.of<CartProvider>(context, listen: false).addToCart(product);
-                                      ScaffoldMessenger.of(context).showSnackBar(
-                                        SnackBar(content: Text('${product.name} added to cart')),
+                                      Provider.of<CartProvider>(
+                                        context,
+                                        listen: false,
+                                      ).addToCart(product);
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(
+                                        SnackBar(
+                                          content: Text(
+                                            '${product.name} added to cart',
+                                          ),
+                                        ),
                                       );
                                     },
                                   ),
@@ -223,12 +277,15 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: Colors.black87.withValues(alpha: 0.8),
+                  color: Colors.black87.withOpacity(0.8),
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Text(
                   _listeningText,
-                  style: const TextStyle(color: Colors.amberAccent, fontSize: 16),
+                  style: const TextStyle(
+                    color: Colors.amberAccent,
+                    fontSize: 16,
+                  ),
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -236,13 +293,15 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: _isListening ? Colors.redAccent : Colors.deepPurpleAccent,
+        backgroundColor: _isListening
+            ? Colors.redAccent
+            : Colors.deepPurpleAccent,
         child: const Icon(Icons.mic),
         onPressed: () {
           setState(() => _isListening = true);
-          _voiceService.listen((text) {
-            _showVoiceFeedback("Heard: $text");
-            _handleVoiceCommand(text);
+          _voiceService.listen((intent, originalText) {
+            _showVoiceFeedback("Heard: $originalText");
+            _handleIntent(intent, originalText);
             _voiceService.stop();
             setState(() => _isListening = false);
           });
@@ -255,9 +314,18 @@ class _HomeScreenState extends State<HomeScreen> {
         unselectedItemColor: Colors.white70,
         backgroundColor: const Color(0xFF2E2D3E),
         items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home_outlined), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.shopping_cart_outlined), label: 'Cart'),
-          BottomNavigationBarItem(icon: Icon(Icons.info_outline), label: 'Info'),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home_outlined),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.shopping_cart_outlined),
+            label: 'Cart',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.info_outline),
+            label: 'Info',
+          ),
         ],
       ),
     );

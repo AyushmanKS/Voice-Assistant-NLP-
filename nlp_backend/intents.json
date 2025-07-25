@@ -1,0 +1,43 @@
+{
+  "intents": [
+    {
+      "tag": "add_to_cart",
+      "patterns": [
+        "add iPhone",
+        "put cloak in cart",
+        "add TV to my cart"
+      ],
+      "responses": [
+        "Adding to cart"
+      ]
+    },
+    {
+      "tag": "search_product",
+      "patterns": [
+        "search for laptop",
+        "find wand",
+        "show me a broomstick"
+      ],
+      "responses": [
+        "Searching product"
+      ]
+    },
+    {
+      "tag": "checkout",
+      "patterns": [
+        "checkout",
+        "check out",
+        "checkout now",
+        "proceed to checkout",
+        "go to cart",
+        "view my cart",
+        "buy items",
+        "place my order",
+        "I'm ready to pay"
+      ],
+      "responses": [
+        "Proceeding to checkout"
+      ]
+    }
+  ]
+}
