@@ -5,7 +5,11 @@
       "patterns": [
         "add iPhone",
         "put cloak in cart",
-        "add TV to my cart"
+        "add TV to my cart",
+        "add wand of elder to cart",
+        "add spell book",
+        "add the potion kit to my cart",
+        "put the invisibility cloak in the cart"
       ],
       "responses": [
         "Adding to cart"
@@ -16,7 +20,12 @@
       "patterns": [
         "search for laptop",
         "find wand",
-        "show me a broomstick"
+        "show me a broomstick",
+        "search spell book",
+        "look for a potion kit",
+        "find the time turner",
+        "search for invisibility cloak",
+        "show me the hogwarts robe"
       ],
       "responses": [
         "Searching product"
@@ -37,6 +46,19 @@
       ],
       "responses": [
         "Proceeding to checkout"
+      ]
+    },
+    {
+      "tag": "go_home",
+      "patterns": [
+        "go home",
+        "go back",
+        "go back to home screen",
+        "show all products",
+        "clear search"
+      ],
+      "responses": [
+        "Returning home"
       ]
     }
   ]
